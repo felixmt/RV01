@@ -85,21 +85,27 @@ public class MouseControl : MonoBehaviour {
 						if (Target.transform.position.x >= markers[i].transform.position.x - 1 && Target.transform.position.x <= markers[i].transform.position.x + 1 && Target.transform.position.z >= markers[i].transform.position.z - 1 && Target.transform.position.x <= markers[i].transform.position.x + 1) {
 							// get bigElement and move in function of mockup element
 							bigElement = getBigElement(Target.name);
+							Vector3 bigElementInitPos = bigElement.transform.position;
 							float x = getBigElementCoord (markers[i].transform.position.x);
 							float z = getBigElementCoord (markers[i].transform.position.z);
-							Vector3 destPos = new Vector3 (x, bigElement.transform.position.y, z);
-							bigElement.GetComponent<Move>().setDestPos (destPos);
-							//bigElement.transform.position = new Vector3 (x, bigElement.transform.position.y, z);
-							// move mockup object
+							Vector3 bigElementDestPos = new Vector3 (x, bigElement.transform.position.y, z);
+							//move real element
+							bigElement.GetComponent<Move>().setDestPos (bigElementDestPos);
+							// move mockup element
 							Target.transform.position = new Vector3 (markers[i].transform.position.x, Target.transform.position.y, markers[i].transform.position.z);
 
 							//Move camera in function of moved element position
-							GetComponent<CameraPosition>().setDestPos (destPos);
+							Vector3 initVector = bigElementInitPos - camera.transform.position;
+							Vector3 destVector = bigElementDestPos - camera.transform.position;
+							float angle = Vector3.Angle (initVector, destVector);
+							float sign = Mathf.Sign (Vector3.Dot (new Vector3 (0, 1, 0), Vector3.Cross (initVector, destVector)));
+							print (angle * sign);
+							GetComponent<CameraPosition>().setDestPos (bigElementDestPos);
 							// Specify rotation orientation
-							//Vector3 screenPos = camera.WorldToScreenPoint(bigElement.transform.position);
-							//print("target x is " + screenPos.x + " pixels from the left and screen width is: " + Screen.width + " target Z is : " + screenPos.z);
-							//if (camera.WorldToScreenPoint(bigElement.transform.position).x < 0)
-							//	GetComponent<CameraPosition>().setRotationOrientation (true);
+							if ((angle * sign) < 0)
+								GetComponent<CameraPosition>().setRotationDirection (false);
+							else
+								GetComponent<CameraPosition>().setRotationDirection (true);
 							GetComponent<CameraPosition>().setBigElementIsMoved (true);
 							
 							// TEST IF element bien positionné

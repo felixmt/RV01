@@ -4,7 +4,7 @@ using System.Collections;
 public class CameraPosition : MonoBehaviour {
 	private bool bigElementIsMoved = false;
 	private Vector3 destPos;
-	//private bool rotationOrientation = false;
+	private bool rotationDirection = true;
 
 	// Use this for initialization
 	void Start () {
@@ -16,10 +16,10 @@ public class CameraPosition : MonoBehaviour {
 		if (bigElementIsMoved) {
 			Vector3 screenPos = camera.WorldToScreenPoint(destPos);
 			if ((screenPos.x > Screen.width || screenPos.z > Screen.height || screenPos.x < 0 || screenPos.z < 0)) {
-				Rotate ();
+				Rotate (rotationDirection);
 				screenPos = camera.WorldToScreenPoint(destPos);
 			} else if(screenPos.x < (Screen.width / 2) - 10  || screenPos.x > (Screen.width / 2) + 10) {
-				Rotate ();
+				Rotate (rotationDirection);
 				screenPos = camera.WorldToScreenPoint(destPos);
 			}
 			else {
@@ -39,9 +39,9 @@ public class CameraPosition : MonoBehaviour {
 		bigElementIsMoved = im;
 	}
 
-	/*public void setRotationOrientation (bool ro) {
-		rotationOrientation = ro;
-	}*/
+	public void setRotationDirection (bool ro) {
+		rotationDirection = ro;
+	}
 
 	public void setDestPos (Vector3 dp) {
 		destPos = dp;
