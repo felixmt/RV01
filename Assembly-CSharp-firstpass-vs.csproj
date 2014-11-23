@@ -60,6 +60,12 @@
  <Reference Include="LeapCSharp.NET3.5">
  <HintPath>D:/RV01_Project2/Assets/Plugins/LeapCSharp.NET3.5.dll</HintPath>
  </Reference>
+ <Reference Include="MySql.Data">
+ <HintPath>D:/RV01_Project2/Assets/Plugins/MySql.Data.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Data">
+ <HintPath>D:/RV01_Project2/Assets/Plugins/System.Data.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

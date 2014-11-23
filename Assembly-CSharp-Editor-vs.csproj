@@ -70,6 +70,12 @@
  <Reference Include="LeapCSharp.NET3.5">
  <HintPath>D:/RV01_Project2/Assets/Plugins/LeapCSharp.NET3.5.dll</HintPath>
  </Reference>
+ <Reference Include="MySql.Data">
+ <HintPath>D:/RV01_Project2/Assets/Plugins/MySql.Data.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Data">
+ <HintPath>D:/RV01_Project2/Assets/Plugins/System.Data.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
  </Reference>
@@ -77,8 +83,6 @@
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass-vs.csproj">
       <Project>{6180D6F3-008C-D5BB-10BF-158A88CCF861}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
-    <ProjectReference Include="Assembly-CSharp-vs.csproj">
-      <Project>{B6452324-CD60-97D7-F1A5-A1AB8A8E0810}</Project>      <Name>Assembly-CSharp-vs</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
