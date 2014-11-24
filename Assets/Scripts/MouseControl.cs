@@ -68,12 +68,7 @@ public class MouseControl : MonoBehaviour {
 					bigElement = getBigElement (Target.name);
 					// send notification piece of information
 					ElementsInfo ei = bigElement.GetComponent<ElementsInfo>();
-					string infos;
-					if(bigElement.name == "Wagon1") {
-						infos = "infos wagon 1";
-					} else {
-						infos = "infos wagon 2";
-					}
+					string infos = getObjectInfos (bigElement.name);
 					ei.setIndication (infos);
 				}
 				if (Input.GetMouseButtonDown (1) && Target != null) {
@@ -100,6 +95,8 @@ public class MouseControl : MonoBehaviour {
 							//A RECHECKER print (angle * sign);
 							GetComponent<CameraPosition>().setDestPos (bigElementDestPos);
 							// Specify rotation orientation
+							print (angle * sign);
+							GetComponent<CameraPosition>().setRotationAngle (angle);
 							if ((angle * sign) < 0)
 								GetComponent<CameraPosition>().setRotationDirection (false);
 							else
@@ -140,12 +137,17 @@ public class MouseControl : MonoBehaviour {
 
 	// set selected object as current object in db / unset released object
 	void setTargetAsCurrent (string objectName, int value) {
-		camera.GetComponent<DatabaseSync>().setCurrentObject (objectName, 1);
+		camera.GetComponent<DatabaseSync>().setCurrentObject (objectName, value);
 	}
 
 	// get elements of a table in db
 	IDataReader getFromDb (string table_name) {
 		return camera.GetComponent<DatabaseSync> ().getTable (table_name);
+	}
+
+	// return an object's description from db
+	string getObjectInfos (string object_name) {
+		return camera.GetComponent<DatabaseSync> ().getObjectDescription (object_name);
 	}
 
 	// Instantiate markers in fct of db
@@ -220,6 +222,34 @@ public class MouseControl : MonoBehaviour {
 			wagons[i].name = mockupWagon.name;
 			wagons[i].transform.parent = GameObject.Find ("Terrain").transform;
 			wagons[i].transform.localScale = new Vector3 (elementsScale, elementsScale, elementsScale);
+			i++;
+		}
+
+		i = 0;
+		List<GameObject> guns = new List<GameObject> ();
+		foreach (GameObject mockupGun in mockupGuns) {
+			float x = getBigElementCoord (mockupGun.transform.position.x);
+			float z = getBigElementCoord (mockupGun.transform.position.z);
+			Vector3 tmp = new Vector3 (x, mockupGun.transform.position.y, z);
+			Quaternion rot = new Quaternion (0, 0, 0, 0);
+			guns.Add(Instantiate (Resources.Load("Wagon"), tmp, /*mockupWagons[i].transform.rotation*/rot) as GameObject);
+			guns[i].name = mockupGun.name;
+			guns[i].transform.parent = GameObject.Find ("Terrain").transform;
+			guns[i].transform.localScale = new Vector3 (elementsScale, elementsScale, elementsScale);
+			i++;
+		}
+
+		i = 0;
+		List<GameObject> persons = new List<GameObject> ();
+		foreach (GameObject mockupPerson in mockupPersons) {
+			float x = getBigElementCoord (mockupPerson.transform.position.x);
+			float z = getBigElementCoord (mockupPerson.transform.position.z);
+			Vector3 tmp = new Vector3 (x, mockupPerson.transform.position.y, z);
+			Quaternion rot = new Quaternion (0, 0, 0, 0);
+			persons.Add(Instantiate (Resources.Load("Wagon"), tmp, /*mockupWagons[i].transform.rotation*/rot) as GameObject);
+			persons[i].name = mockupPerson.name;
+			persons[i].transform.parent = GameObject.Find ("Terrain").transform;
+			persons[i].transform.localScale = new Vector3 (elementsScale, elementsScale, elementsScale);
 			i++;
 		}
 	}

@@ -9,6 +9,16 @@ public class DatabaseSync : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		OpenConnection ();
+		IDbCommand dbcmd = dbcon.CreateCommand();
+		string sql =
+			"UPDATE Object SET isCurrent = 0";
+		dbcmd.CommandText = sql;
+		int nbligne = dbcmd.ExecuteNonQuery();
+		// clean up
+		dbcmd.Dispose();
+		dbcmd = null;
+		CloseConnection ();	
 	}
 	
 	// Update is called once per frame
@@ -17,12 +27,21 @@ public class DatabaseSync : MonoBehaviour {
 	}
 
 	void OpenConnection () {
+		// connexion locale
 		string connectionString =
 			"Server=localhost;" +
 				"Database=unity_rv01;" +
 				"User ID=root;" +
 				"Password=;" +
 				"Pooling=false";
+
+		// connexion motot.eu
+		/*string connectionString = 
+			"Server=http://felix.motot.eu/;" +
+				"Database=alp_rv01;" +
+				"User ID=alp_felix;" +
+				"Password=21340_Fel;" +
+				"Pooling=false";*/
 		
 		dbcon = new MySqlConnection(connectionString);
 		dbcon.Open();
@@ -33,42 +52,18 @@ public class DatabaseSync : MonoBehaviour {
 		dbcon = null;
 	}
 
-	void Test () {
-		OpenConnection ();
-		IDbCommand dbcmd = dbcon.CreateCommand();
-		string sql =
-			"SELECT firstname, lastname " +
-				"FROM employee";
-		dbcmd.CommandText = sql;
-		IDataReader reader = dbcmd.ExecuteReader();
-		while(reader.Read()) {
-			string FirstName = (string) reader["firstname"];
-			string LastName = (string) reader["lastname"];
-			print("Name: " +
-			      FirstName + " " + LastName);
-		}
-		// clean up
-		reader.Close();
-		reader = null;
-		dbcmd.Dispose();
-		dbcmd = null;
-		CloseConnection ();	
-	}
-
-	public void Update (string table, string name, string attribute, string value) {
+	/*public void Update (string table, string name, string attribute, string value) {
 		OpenConnection ();
 		IDbCommand dbcmd = dbcon.CreateCommand();
 		string sql =
 			"UPDATE " + table +  " SET " + attribute + " = '" + value + "' WHERE name = '" + name + "'";
-		print (sql);
 		dbcmd.CommandText = sql;
 		int nbligne = dbcmd.ExecuteNonQuery();
-		print ("nb lignes affectées " + nbligne);
 		// clean up
 		dbcmd.Dispose();
 		dbcmd = null;
 		CloseConnection ();	
-	}
+	}*/
 
 	// set or unset user's currently used object
 	public void setCurrentObject (string name, int value) {
@@ -76,10 +71,8 @@ public class DatabaseSync : MonoBehaviour {
 		IDbCommand dbcmd = dbcon.CreateCommand();
 		string sql =
 			"UPDATE Object SET isCurrent = " + value + " WHERE name = '" + name + "'";
-		print (sql);
 		dbcmd.CommandText = sql;
 		int nbligne = dbcmd.ExecuteNonQuery();
-		print ("nb lignes affectées " + nbligne);
 		// clean up
 		dbcmd.Dispose();
 		dbcmd = null;
@@ -101,5 +94,26 @@ public class DatabaseSync : MonoBehaviour {
 		//dbcmd = null;
 		//CloseConnection ();	
 		return reader;
+	}
+
+	// get description of an object
+	public string getObjectDescription (string object_name) {
+		OpenConnection ();
+		IDbCommand dbcmd = dbcon.CreateCommand();
+		string sql = "SELECT description FROM Object WHERE name = '" + object_name + "'";
+		dbcmd.CommandText = sql;
+		IDataReader reader = dbcmd.ExecuteReader();
+		string desc = "";
+		while(reader.Read()) {
+			desc = (string) reader["description"];
+		}
+		// clean up
+		reader.Close();
+		reader = null;
+		dbcmd.Dispose();
+		dbcmd = null;
+		CloseConnection ();
+
+		return desc;
 	}
 }
