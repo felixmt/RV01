@@ -16,7 +16,6 @@ public class CameraPosition : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (bigElementIsMoved) {
-			Vector3 screenPos = camera.WorldToScreenPoint(destPos);
 			if (bigElementIsMoved) {
 				Rotate (rotationDirection);
 				test = test + 2;

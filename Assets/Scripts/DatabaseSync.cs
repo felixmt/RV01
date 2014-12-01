@@ -18,6 +18,14 @@ public class DatabaseSync : MonoBehaviour {
 		// clean up
 		dbcmd.Dispose();
 		dbcmd = null;
+
+		dbcmd = dbcon.CreateCommand();
+		sql = "UPDATE Object SET current_marker_id = null";
+		dbcmd.CommandText = sql;
+		nbligne = dbcmd.ExecuteNonQuery();
+		// clean up
+		dbcmd.Dispose();
+		dbcmd = null;
 		CloseConnection ();	
 	}
 	
@@ -76,6 +84,34 @@ public class DatabaseSync : MonoBehaviour {
 		// clean up
 		dbcmd.Dispose();
 		dbcmd = null;
+		CloseConnection ();	
+	}
+
+	public void setCurrentMarker (string objectName, string markerName) {
+		int id_marker = 0;
+		OpenConnection ();
+		IDbCommand dbcmd = dbcon.CreateCommand();
+		string sql = "SELECT id FROM marker WHERE name = '" + markerName + "'";
+		dbcmd.CommandText = sql;
+		IDataReader reader = dbcmd.ExecuteReader();
+		while(reader.Read()) {
+			id_marker = (int) reader["id"];
+		}
+		// clean up
+		reader.Close();
+		reader = null;
+		dbcmd.Dispose();
+		dbcmd = null;
+
+		if (id_marker != 0) {
+			dbcmd = dbcon.CreateCommand();
+			sql = "UPDATE Object SET current_marker_id = " + id_marker + " WHERE name = '" + objectName + "'";
+			dbcmd.CommandText = sql;
+			int nbligne = dbcmd.ExecuteNonQuery();
+			// clean up
+			dbcmd.Dispose();
+			dbcmd = null;
+		}
 		CloseConnection ();	
 	}
 

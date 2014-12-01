@@ -45,8 +45,18 @@ public class MouseControl : MonoBehaviour {
 	}
 
 	void MoveElements() {
+		//print (camera.transform.eulerAngles.y);
+		/*GameObject.Find ("Terrain").*/GetComponent<Compass>().CompassChange (camera.transform.eulerAngles.y);
+
 		RaycastHit rayHit;
 		Ray ray = camera.ScreenPointToRay (Input.mousePosition);
+		GameObject hand = GameObject.Find ("HandController");
+		HandModel test = hand.GetComponent<HandController> ().rightPhysicsModel;
+		print (test.GetPalmPosition ());
+		//test.SetLeapHand (hand);
+		//print (test.fingers[1].GetOffset());
+		      //rightPhysicsModel;
+		//print (test.GetPalmPosition ());
 		//Ray ray2 = camera.ScreenPointToRay (leap.transform.position);
 		//Debug.DrawRay( ray2.origin , ray2.direction * 1000 , Color.red ) ; 
 		//HandModel hand_model = leap.GetComponent<HandController
@@ -88,14 +98,14 @@ public class MouseControl : MonoBehaviour {
 							Target.transform.position = new Vector3 (marker.transform.position.x, Target.transform.position.y, marker.transform.position.z);
 
 							//Move camera in function of moved element position
-							Vector3 initVector = bigElementInitPos - camera.transform.position;
+							Vector3 initVector = camera.transform.up;//bigElementInitPos - camera.transform.position;
 							Vector3 destVector = bigElementDestPos - camera.transform.position;
+
 							float angle = Vector3.Angle (initVector, destVector);
 							float sign = Mathf.Sign (Vector3.Dot (new Vector3 (0, 1, 0), Vector3.Cross (initVector, destVector)));
-							//A RECHECKER print (angle * sign);
 							GetComponent<CameraPosition>().setDestPos (bigElementDestPos);
 							// Specify rotation orientation
-							print (angle * sign);
+							//print (angle * sign);
 							GetComponent<CameraPosition>().setRotationAngle (angle);
 							if ((angle * sign) < 0)
 								GetComponent<CameraPosition>().setRotationDirection (false);
@@ -115,6 +125,7 @@ public class MouseControl : MonoBehaviour {
 							}
 							// Associe marqueur à l'élément
 							Target.GetComponent<MockupObjectInfos>().currentMarker = marker;
+							setCurrentMarker(Target.name, marker.name);
 							bigElement = null;
 							Target = null;
 							markerIsFound = true;
@@ -140,6 +151,10 @@ public class MouseControl : MonoBehaviour {
 		camera.GetComponent<DatabaseSync>().setCurrentObject (objectName, value);
 	}
 
+	void setCurrentMarker (string objectName, string markerName) {
+		camera.GetComponent<DatabaseSync> ().setCurrentMarker (objectName, markerName);
+	}
+
 	// get elements of a table in db
 	IDataReader getFromDb (string table_name) {
 		return camera.GetComponent<DatabaseSync> ().getTable (table_name);
@@ -161,9 +176,9 @@ public class MouseControl : MonoBehaviour {
 			Vector3 tmp = new Vector3 ((float) data["posX"], (float) data["posY"], (float) data["posZ"]);
 			markers.Add (Instantiate (Resources.Load ("Markers"), tmp, new Quaternion (0, 0, 0, 0)) as GameObject);
 			markers[i].name = (string) data["name"];
-			i++;
-			
+			i++;	
 		}
+		markers.Add (GameObject.FindGameObjectWithTag("markerCentral"));
 		data.Close();
 		data = null;
 
@@ -232,7 +247,7 @@ public class MouseControl : MonoBehaviour {
 			float z = getBigElementCoord (mockupGun.transform.position.z);
 			Vector3 tmp = new Vector3 (x, mockupGun.transform.position.y, z);
 			Quaternion rot = new Quaternion (0, 0, 0, 0);
-			guns.Add(Instantiate (Resources.Load("Wagon"), tmp, /*mockupWagons[i].transform.rotation*/rot) as GameObject);
+			guns.Add(Instantiate (Resources.Load("Canon"), tmp, /*mockupWagons[i].transform.rotation*/rot) as GameObject);
 			guns[i].name = mockupGun.name;
 			guns[i].transform.parent = GameObject.Find ("Terrain").transform;
 			guns[i].transform.localScale = new Vector3 (elementsScale, elementsScale, elementsScale);
@@ -246,7 +261,7 @@ public class MouseControl : MonoBehaviour {
 			float z = getBigElementCoord (mockupPerson.transform.position.z);
 			Vector3 tmp = new Vector3 (x, mockupPerson.transform.position.y, z);
 			Quaternion rot = new Quaternion (0, 0, 0, 0);
-			persons.Add(Instantiate (Resources.Load("Wagon"), tmp, /*mockupWagons[i].transform.rotation*/rot) as GameObject);
+			persons.Add(Instantiate (Resources.Load("Person"), tmp, /*mockupWagons[i].transform.rotation*/rot) as GameObject);
 			persons[i].name = mockupPerson.name;
 			persons[i].transform.parent = GameObject.Find ("Terrain").transform;
 			persons[i].transform.localScale = new Vector3 (elementsScale, elementsScale, elementsScale);
