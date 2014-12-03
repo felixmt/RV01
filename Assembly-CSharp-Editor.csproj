@@ -47,9 +47,6 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\LeapMotion\Editor\HandControllerEditor.cs" />
-     <Compile Include="Assets\Splines\Scripts\Editor\SplineControllerInspector.cs" />
-     <Compile Include="Assets\Splines\Scripts\Editor\SplineInspector.cs" />
-     <Compile Include="Assets\Splines\Scripts\Editor\SplineNodeInspector.cs" />
      <Compile Include="Assets\TerrainToolkit\Editor\TerrainToolkitEditor.cs" />
      <None Include="Assets\LeapMotion\Materials\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\LeapMotion\InteractionUtils (alpha)\readme.txt" />

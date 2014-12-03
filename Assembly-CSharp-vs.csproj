@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\LeapControl.cs" />
      <Compile Include="Assets\LeapMotion\DemoResources\Scripts\AerodynamicLeaf.cs" />
      <Compile Include="Assets\LeapMotion\DemoResources\Scripts\ChangeMaterialOnGrab.cs" />
      <Compile Include="Assets\LeapMotion\DemoResources\Scripts\CubeWave.cs" />
@@ -115,13 +116,6 @@
      <Compile Include="Assets\Scripts\NotificationCenter.cs" />
      <Compile Include="Assets\Scripts\NotificationCenterGui.cs" />
      <Compile Include="Assets\Scripts\RayCast.cs" />
-     <Compile Include="Assets\Splines\Scripts\HelperClasses\Set.cs" />
-     <Compile Include="Assets\Splines\Scripts\HelperClasses\Utility.cs" />
-     <Compile Include="Assets\Splines\Scripts\SplineClasses\Spline.cs" />
-     <Compile Include="Assets\Splines\Scripts\SplineClasses\SplineColliderDraw.cs" />
-     <Compile Include="Assets\Splines\Scripts\SplineClasses\SplineController.cs" />
-     <Compile Include="Assets\Splines\Scripts\SplineClasses\SplineNode.cs" />
-     <Compile Include="Assets\Splines\Scripts\SplineClasses\SplineTester.cs" />
      <Compile Include="Assets\TerrainToolkit\TerrainToolkit.cs" />
      <None Include="Assets\LeapMotion\Materials\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\LeapMotion\InteractionUtils (alpha)\readme.txt" />

@@ -16,6 +16,6 @@ public class NotificationCenterGui : MonoBehaviour {
 
 	void OnGUI () {
 		NotificationCenter nc = gameObject.GetComponent<NotificationCenter> ();
-		GUI.Label (rect, "Informations pour placer l'élément :" + nc.getIndication());
+		GUI.Label (rect, nc.getIndication());
 	}
 }

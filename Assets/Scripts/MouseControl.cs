@@ -45,23 +45,21 @@ public class MouseControl : MonoBehaviour {
 	}
 
 	void MoveElements() {
-		//print (camera.transform.eulerAngles.y);
-		/*GameObject.Find ("Terrain").*/GetComponent<Compass>().CompassChange (camera.transform.eulerAngles.y);
+		GetComponent<Compass>().CompassChange (camera.transform.eulerAngles.y);
 
 		RaycastHit rayHit;
 		Ray ray = camera.ScreenPointToRay (Input.mousePosition);
-		GameObject hand = GameObject.Find ("HandController");
-		HandModel test = hand.GetComponent<HandController> ().rightPhysicsModel;
-		print (test.GetPalmPosition ());
-		//test.SetLeapHand (hand);
-		//print (test.fingers[1].GetOffset());
-		      //rightPhysicsModel;
-		//print (test.GetPalmPosition ());
-		//Ray ray2 = camera.ScreenPointToRay (leap.transform.position);
-		//Debug.DrawRay( ray2.origin , ray2.direction * 1000 , Color.red ) ; 
-		//HandModel hand_model = leap.GetComponent<HandController
-		//hand_model.SetLeapHand (leap);
-		//print(hand_model.GetPalmDirection ());
+		//print (Input.mousePosition);
+
+		/*GameObject obj = GameObject.Find ("HandController");
+		HandController handController = obj.GetComponent<HandController> ();
+		HandModel[] hands = handController.GetAllGraphicsHands();
+		foreach(HandModel hand in hands) {
+			print (hand.GetPalmPosition());
+			Ray ray2 = camera.ScreenPointToRay (hand.GetPalmPosition());
+			Debug.DrawRay( ray2.origin , ray2.direction * 1000 , Color.red ) ; 
+		}*/
+
 		if (Physics.Raycast(ray.origin, ray.direction, out rayHit, 1000.0F)) {
 			if (rayHit.collider.name == "Plane") {
 				if	(Target != null) {
@@ -70,6 +68,12 @@ public class MouseControl : MonoBehaviour {
 			} else {
 				if (Input.GetMouseButtonDown(0)) {
 					Target = rayHit.collider.gameObject;
+
+					string targetName = Target.name;
+					audio.clip = (AudioClip) Resources.Load("Audio/" + targetName);
+					AudioClip sound =  (AudioClip) Resources.Load("Audio/" + targetName);
+					audio.PlayOneShot(sound);
+
 					setTargetAsCurrent (Target.name, 1);
 					// backup initial object position
 					myPosition = Target.transform.position;
@@ -79,7 +83,7 @@ public class MouseControl : MonoBehaviour {
 					// send notification piece of information
 					ElementsInfo ei = bigElement.GetComponent<ElementsInfo>();
 					string infos = getObjectInfos (bigElement.name);
-					ei.setIndication (infos);
+					ei.setIndication (Target.name + " : " + infos);
 				}
 				if (Input.GetMouseButtonDown (1) && Target != null) {
 					setTargetAsCurrent (Target.name, 0);
@@ -174,7 +178,7 @@ public class MouseControl : MonoBehaviour {
 		int i = 0;
 		while (data.Read()) {
 			Vector3 tmp = new Vector3 ((float) data["posX"], (float) data["posY"], (float) data["posZ"]);
-			markers.Add (Instantiate (Resources.Load ("Markers"), tmp, new Quaternion (0, 0, 0, 0)) as GameObject);
+			markers.Add (Instantiate (Resources.Load ("Prefabs/Markers"), tmp, new Quaternion (0, 0, 0, 0)) as GameObject);
 			markers[i].name = (string) data["name"];
 			i++;	
 		}
@@ -195,7 +199,7 @@ public class MouseControl : MonoBehaviour {
 		while (data.Read()) {
 			Vector3 tmp = new Vector3 ((float) data["posX"], (float) data["posY"], (float) data["posZ"]);
 			if ((int)data["object_type_id"] == 1) {
-				mockupWagons.Add (Instantiate (Resources.Load ("MockupWagon"), tmp, new Quaternion (0, 0, 0, 0)) as GameObject);
+				mockupWagons.Add (Instantiate (Resources.Load ("Prefabs/MockupWagon"), tmp, new Quaternion (0, 0, 0, 0)) as GameObject);
 				mockupWagons[w].name = (string) data["name"];
 				foreach (GameObject marker in markers) {
 					if (marker.name == mockupWagons[w].name)
@@ -203,7 +207,7 @@ public class MouseControl : MonoBehaviour {
 				}
 				w++;
 			} else if ((int)data["object_type_id"] == 2) {
-				mockupGuns.Add (Instantiate (Resources.Load ("MockupGun"), tmp, new Quaternion (0, 0, 0, 0)) as GameObject);
+				mockupGuns.Add (Instantiate (Resources.Load ("Prefabs/MockupGun"), tmp, new Quaternion (0, 0, 0, 0)) as GameObject);
 				mockupGuns[g].name = (string) data["name"];
 				foreach (GameObject marker in markers) {
 					if (marker.name == mockupGuns[g].name)
@@ -211,13 +215,13 @@ public class MouseControl : MonoBehaviour {
 				}
 				g++;
 			} else if ((int)data["object_type_id"] == 3) {
-				mockupPersons.Add (Instantiate (Resources.Load ("MockupPerson"), tmp, new Quaternion (0, 0, 0, 0)) as GameObject);
-				mockupPersons[g].name = (string) data["name"];
+				mockupPersons.Add (Instantiate (Resources.Load ("Prefabs/MockupPerson"), tmp, new Quaternion (0, 0, 0, 0)) as GameObject);
+				mockupPersons[p].name = (string) data["name"];
 				foreach (GameObject marker in markers) {
-					if (marker.name == mockupPersons[g].name)
-						mockupPersons[g].GetComponent<MockupObjectInfos>().setAssociatedMarker(marker);
+					if (marker.name == mockupPersons[p].name)
+						mockupPersons[p].GetComponent<MockupObjectInfos>().setAssociatedMarker(marker);
 				}
-				g++;
+				p++;
 			}
 		}
 		data.Close();
@@ -233,7 +237,7 @@ public class MouseControl : MonoBehaviour {
 			//Debug.Log ("x val: " + x + " z val :" + z);
 			Vector3 tmp = new Vector3 (x, mockupWagon.transform.position.y, z);
 			Quaternion rot = new Quaternion (0, 0, 0, 0);
-			wagons.Add(Instantiate (Resources.Load("Wagon"), tmp, /*mockupWagons[i].transform.rotation*/rot) as GameObject);
+			wagons.Add(Instantiate (Resources.Load("Prefabs/Wagon"), tmp, /*mockupWagons[i].transform.rotation*/rot) as GameObject);
 			wagons[i].name = mockupWagon.name;
 			wagons[i].transform.parent = GameObject.Find ("Terrain").transform;
 			wagons[i].transform.localScale = new Vector3 (elementsScale, elementsScale, elementsScale);
@@ -247,7 +251,7 @@ public class MouseControl : MonoBehaviour {
 			float z = getBigElementCoord (mockupGun.transform.position.z);
 			Vector3 tmp = new Vector3 (x, mockupGun.transform.position.y, z);
 			Quaternion rot = new Quaternion (0, 0, 0, 0);
-			guns.Add(Instantiate (Resources.Load("Canon"), tmp, /*mockupWagons[i].transform.rotation*/rot) as GameObject);
+			guns.Add(Instantiate (Resources.Load("Prefabs/Canon"), tmp, /*mockupWagons[i].transform.rotation*/rot) as GameObject);
 			guns[i].name = mockupGun.name;
 			guns[i].transform.parent = GameObject.Find ("Terrain").transform;
 			guns[i].transform.localScale = new Vector3 (elementsScale, elementsScale, elementsScale);
@@ -261,7 +265,7 @@ public class MouseControl : MonoBehaviour {
 			float z = getBigElementCoord (mockupPerson.transform.position.z);
 			Vector3 tmp = new Vector3 (x, mockupPerson.transform.position.y, z);
 			Quaternion rot = new Quaternion (0, 0, 0, 0);
-			persons.Add(Instantiate (Resources.Load("Person"), tmp, /*mockupWagons[i].transform.rotation*/rot) as GameObject);
+			persons.Add(Instantiate (Resources.Load("Prefabs/Person"), tmp, /*mockupWagons[i].transform.rotation*/rot) as GameObject);
 			persons[i].name = mockupPerson.name;
 			persons[i].transform.parent = GameObject.Find ("Terrain").transform;
 			persons[i].transform.localScale = new Vector3 (elementsScale, elementsScale, elementsScale);

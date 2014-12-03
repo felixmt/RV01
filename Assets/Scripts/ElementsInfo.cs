@@ -3,6 +3,7 @@ using System.Collections;
 
 public class ElementsInfo : MonoBehaviour {
 	private string indications;
+	private string name;
 
 	// Use this for initialization
 	void Start () {
