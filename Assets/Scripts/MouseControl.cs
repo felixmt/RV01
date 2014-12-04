@@ -23,6 +23,9 @@ public class MouseControl : MonoBehaviour {
 		InstantiateMarkers ();
 		InstantiateMockupObjects ();
 		InstantiateObjects ();
+
+		audio.clip = (AudioClip) Resources.Load("Audio/Start");
+		audio.Play();
 	}
 	
 	// Update is called once per frame
@@ -36,7 +39,16 @@ public class MouseControl : MonoBehaviour {
 			}
 		}
 		if (endOfGame == true) {
+			audio.clip = (AudioClip) Resources.Load("Audio/Start");
+			audio.Play();
+			//new WaitForSeconds (audio.clip.length);
+			//audio.clip = (AudioClip) Resources.Load("Audio/Clairon");
+			//sound =  (AudioClip) Resources.Load("Audio/Clairon");
+			//audio.PlayOneShot(sound);*/
+			Application.Quit();
 			Debug.Log ("Jeu Fini!!");
+		} else {
+			endOfGame = true;
 		}
 	}
 
@@ -70,9 +82,8 @@ public class MouseControl : MonoBehaviour {
 					Target = rayHit.collider.gameObject;
 
 					string targetName = Target.name;
-					audio.clip = (AudioClip) Resources.Load("Audio/" + targetName);
-					AudioClip sound =  (AudioClip) Resources.Load("Audio/" + targetName);
-					audio.PlayOneShot(sound);
+					audio.clip = (AudioClip) Resources.Load("Audio/" + Target.name);
+					audio.Play();
 
 					setTargetAsCurrent (Target.name, 1);
 					// backup initial object position
@@ -89,7 +100,7 @@ public class MouseControl : MonoBehaviour {
 					setTargetAsCurrent (Target.name, 0);
 					bool markerIsFound = false;
 					foreach (GameObject marker in markers) {
-						if (Target.transform.position.x >= marker.transform.position.x - 1 && Target.transform.position.x <= marker.transform.position.x + 1 && Target.transform.position.z >= marker.transform.position.z - 1 && Target.transform.position.x <= marker.transform.position.x + 1) {
+						if (Target.transform.position.x >= marker.transform.position.x - 1 && Target.transform.position.x <= marker.transform.position.x + 1 && Target.transform.position.z >= marker.transform.position.z - 1 && Target.transform.position.z <= marker.transform.position.z + 1) {
 							// get bigElement and move in function of mockup element
 							bigElement = getBigElement(Target.name);
 							Vector3 bigElementInitPos = bigElement.transform.position;
