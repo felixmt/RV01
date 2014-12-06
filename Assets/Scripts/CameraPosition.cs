@@ -3,7 +3,6 @@ using System.Collections;
 
 public class CameraPosition : MonoBehaviour {
 	private bool bigElementIsMoved = false;
-	private Vector3 destPos;
 	private bool rotationDirection = true;
 	private float angle = 0;
 	private float test = 0;
@@ -50,10 +49,6 @@ public class CameraPosition : MonoBehaviour {
 
 	public void setRotationDirection (bool ro) {
 		rotationDirection = ro;
-	}
-
-	public void setDestPos (Vector3 dp) {
-		destPos = dp;
 	}
 
 	public void setRotationAngle (float deg) {

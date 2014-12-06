@@ -133,10 +133,10 @@ public class DatabaseSync : MonoBehaviour {
 	}
 
 	// get description of an object
-	public string getObjectDescription (string object_name) {
+	public string getObjectDescription (int order) {
 		OpenConnection ();
 		IDbCommand dbcmd = dbcon.CreateCommand();
-		string sql = "SELECT description FROM Object WHERE name = '" + object_name + "'";
+		string sql = "SELECT description FROM Object WHERE `order` = " + order;
 		dbcmd.CommandText = sql;
 		IDataReader reader = dbcmd.ExecuteReader();
 		string desc = "";
@@ -151,5 +151,43 @@ public class DatabaseSync : MonoBehaviour {
 		CloseConnection ();
 
 		return desc;
+	}
+
+	// get coord x & z of an object
+	public float[] getObjectCoord (int order) {
+		OpenConnection ();
+		IDbCommand dbcmd = dbcon.CreateCommand();
+		string sql = "SELECT posX, posZ FROM Object WHERE `order` = " + order;
+		dbcmd.CommandText = sql;
+		IDataReader reader = dbcmd.ExecuteReader();
+		float[] coord = new float[2];
+		while(reader.Read()) {
+			coord[0] = (float) reader["posX"];
+			coord[1] = (float) reader["posZ"];
+		}
+		// clean up
+		reader.Close();
+		reader = null;
+		dbcmd.Dispose();
+		dbcmd = null;
+		CloseConnection ();
+		
+		return coord;
+	}
+
+	public IDataReader getObject (int order) {
+		OpenConnection ();
+		IDbCommand dbcmd = dbcon.CreateCommand();
+		string sql =
+			"SELECT * FROM Object WHERE `order` =  " + order;
+		dbcmd.CommandText = sql;
+		IDataReader reader = dbcmd.ExecuteReader();
+		// clean up
+		//reader.Close();
+		//reader = null;
+		//dbcmd.Dispose();
+		//dbcmd = null;
+		//CloseConnection ();	
+		return reader;
 	}
 }
