@@ -3,6 +3,7 @@ using System.Collections;
 
 public class NotificationCenterGui : MonoBehaviour {
 	private Rect rect;
+	public Texture test;
 	// Use this for initialization
 	void Start () {
 		rect = new Rect (5,5,300,200);

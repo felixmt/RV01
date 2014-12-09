@@ -15,11 +15,16 @@ public class LeapControl : MonoBehaviour {
 	
 	protected bool pinching_;
 
+	Leap.Controller leap_controller;
+
 	// Use this for initialization
 	void Start () {
 		controller = GameObject.Find ("TopCamera").GetComponent<Control> ();
 		topCamera = GameObject.Find ("TopCamera");
 		pinching_ = false;
+		leap_controller = new Leap.Controller ();
+		leap_controller.EnableGesture (Gesture.GestureType.TYPE_SWIPE);
+		//leap_controller.Config.SetFloat ("Gesture.swipe.MinVelocity", 500f);
 	}
 	
 	// Update is called once per frame
@@ -27,6 +32,21 @@ public class LeapControl : MonoBehaviour {
 		bool trigger_pinch = false;
 		HandModel hand_model = GetComponent<HandModel>();
 		Hand leap_hand = hand_model.GetLeapHand();
+		//if (leap_controller.IsGestureEnabled(Gesture.GestureType.TYPE_SWIPE))				
+		//	print ("yes");
+		Frame frame = leap_controller.Frame();
+		foreach (Gesture gesture in frame.Gestures())
+		{
+			switch(gesture.Type)
+			{
+				case (Gesture.GestureType.TYPESWIPE):
+				{
+					print ("Swipe gesture recognized");
+					controller.Rotation ();
+					break;
+				}
+			}
+		}
 		
 		if (leap_hand == null)
 			return;

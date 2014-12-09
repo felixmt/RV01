@@ -42,14 +42,6 @@ public class DatabaseSync : MonoBehaviour {
 				"User ID=root;" +
 				"Password=;" +
 				"Pooling=false";
-
-		// connexion motot.eu
-		/*string connectionString = 
-			"Server=http://felix.motot.eu/;" +
-				"Database=alp_rv01;" +
-				"User ID=alp_felix;" +
-				"Password=21340_Fel;" +
-				"Pooling=false";*/
 		
 		dbcon = new MySqlConnection(connectionString);
 		dbcon.Open();
@@ -59,19 +51,6 @@ public class DatabaseSync : MonoBehaviour {
 		dbcon.Close();
 		dbcon = null;
 	}
-
-	/*public void Update (string table, string name, string attribute, string value) {
-		OpenConnection ();
-		IDbCommand dbcmd = dbcon.CreateCommand();
-		string sql =
-			"UPDATE " + table +  " SET " + attribute + " = '" + value + "' WHERE name = '" + name + "'";
-		dbcmd.CommandText = sql;
-		int nbligne = dbcmd.ExecuteNonQuery();
-		// clean up
-		dbcmd.Dispose();
-		dbcmd = null;
-		CloseConnection ();	
-	}*/
 
 	// set or unset user's currently used object
 	public void setCurrentObject (string name, int value) {
