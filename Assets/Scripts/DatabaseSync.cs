@@ -6,15 +6,16 @@ using MySql.Data.MySqlClient;
 
 public class DatabaseSync : MonoBehaviour {
 	private IDbConnection dbcon;
-
+	
 	// Use this for initialization
 	void Start () {
+
 		OpenConnection ();
 		IDbCommand dbcmd = dbcon.CreateCommand();
 		string sql =
 			"UPDATE Object SET isCurrent = 0";
 		dbcmd.CommandText = sql;
-		int nbligne = dbcmd.ExecuteNonQuery();
+		dbcmd.ExecuteNonQuery();
 		// clean up
 		dbcmd.Dispose();
 		dbcmd = null;
@@ -22,7 +23,7 @@ public class DatabaseSync : MonoBehaviour {
 		dbcmd = dbcon.CreateCommand();
 		sql = "UPDATE Object SET current_marker_id = null";
 		dbcmd.CommandText = sql;
-		nbligne = dbcmd.ExecuteNonQuery();
+		dbcmd.ExecuteNonQuery();
 		// clean up
 		dbcmd.Dispose();
 		dbcmd = null;
@@ -59,7 +60,7 @@ public class DatabaseSync : MonoBehaviour {
 		string sql =
 			"UPDATE Object SET isCurrent = " + value + " WHERE name = '" + name + "'";
 		dbcmd.CommandText = sql;
-		int nbligne = dbcmd.ExecuteNonQuery();
+		dbcmd.ExecuteNonQuery();
 		// clean up
 		dbcmd.Dispose();
 		dbcmd = null;
@@ -86,7 +87,7 @@ public class DatabaseSync : MonoBehaviour {
 			dbcmd = dbcon.CreateCommand();
 			sql = "UPDATE Object SET current_marker_id = " + id_marker + " WHERE name = '" + objectName + "'";
 			dbcmd.CommandText = sql;
-			int nbligne = dbcmd.ExecuteNonQuery();
+			dbcmd.ExecuteNonQuery();
 			// clean up
 			dbcmd.Dispose();
 			dbcmd = null;

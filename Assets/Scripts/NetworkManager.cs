@@ -5,7 +5,7 @@ public class NetworkManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Network.InitializeServer(32, 25002, !Network.HavePublicAddress());
+		//Network.InitializeServer(32, 25002, !Network.HavePublicAddress());
 		//MasterServer.RegisterHost("MyUniqueGameType", "JohnDoes game", "l33t game for all");
 	
 	}

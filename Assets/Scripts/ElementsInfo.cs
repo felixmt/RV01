@@ -2,8 +2,7 @@
 using System.Collections;
 
 public class ElementsInfo : MonoBehaviour {
-	private string indications;
-	private string name;
+	private Vector3 finalRotation;
 
 	// Use this for initialization
 	void Start () {
@@ -16,8 +15,15 @@ public class ElementsInfo : MonoBehaviour {
 	}
 
 	public void setIndication (string indic) {
-		indications = indic;
 		SendMessageUpwards ("objectChange", indic);
 		
+	}
+
+	public void setFinalRotation (Vector3 rot) {
+		finalRotation = rot;
+	}
+
+	public Vector3 getFinalRotation () {
+		return finalRotation;
 	}
 }

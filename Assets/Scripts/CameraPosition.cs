@@ -17,24 +17,12 @@ public class CameraPosition : MonoBehaviour {
 		if (bigElementIsMoved) {
 			if (bigElementIsMoved) {
 				Rotate (rotationDirection);
-				test = test + 2;
+				test = test + 1;
 				if (test >= angle) {
 					bigElementIsMoved = false;
 					test = 0;
 				}
 			}
-			//print("target x is " + screenPos.x + " pixels from the left and screen width is: " + Screen.width + " target Z is : " + screenPos.z + "screen height is " + Screen.height);
-			/*if ((screenPos.x > Screen.width || screenPos.z > Screen.height || screenPos.x < 0 || screenPos.z < 0)) {
-				Rotate (rotationDirection);
-				screenPos = camera.WorldToScreenPoint(destPos);
-			} /*else if(screenPos.x < (Screen.width / 2) - 10  || screenPos.x > (Screen.width / 2) + 10) {
-				Rotate (rotationDirection);
-				screenPos = camera.WorldToScreenPoint(destPos);
-			}
-			else {
-				bigElementIsMoved = false;
-				//destPos = new Vector3 (0, 0, 0);
-			}*/
 		}
 		if (Input.GetKey ("right")) {
 			Rotate ();
@@ -60,9 +48,9 @@ public class CameraPosition : MonoBehaviour {
 		Vector3 axe = Vector3.up; // Axe vertical de rotation
 		float angle = 0;;
 		if (sens)
-			angle = 2.0f; // rotation 2 deg
+			angle = 1.0f; // rotation 2 deg
 		else
-			angle = -2.0f;		
+			angle = -1.0f;		
 		transform.RotateAround(centre, axe, angle);
 	}
 }

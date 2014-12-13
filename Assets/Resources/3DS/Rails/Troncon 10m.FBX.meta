@@ -1,0 +1,139 @@
+fileFormatVersion: 2
+guid: e50c270e1c40e6042963a869ae8407ba
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: _Point_Raccord_Rail001
+    100002: _Rail_Guidage
+    100004: Rail_Droit
+    100006: Rail_Gauche
+    100008: Traverse_00
+    100010: Traverse_006
+    100012: Traverse_007
+    100014: Traverse_008
+    100016: Traverse_009
+    100018: Traverse_01
+    100020: Traverse_010
+    100022: Traverse_011
+    100024: Traverse_02
+    100026: Traverse_03
+    100028: Traverse_04
+    100030: Traverse_05
+    100032: //RootNode
+    400000: _Point_Raccord_Rail001
+    400002: _Rail_Guidage
+    400004: Rail_Droit
+    400006: Rail_Gauche
+    400008: Traverse_00
+    400010: Traverse_006
+    400012: Traverse_007
+    400014: Traverse_008
+    400016: Traverse_009
+    400018: Traverse_01
+    400020: Traverse_010
+    400022: Traverse_011
+    400024: Traverse_02
+    400026: Traverse_03
+    400028: Traverse_04
+    400030: Traverse_05
+    400032: //RootNode
+    2300000: _Rail_Guidage
+    2300002: Rail_Droit
+    2300004: Rail_Gauche
+    2300006: Traverse_00
+    2300008: Traverse_006
+    2300010: Traverse_007
+    2300012: Traverse_008
+    2300014: Traverse_009
+    2300016: Traverse_01
+    2300018: Traverse_010
+    2300020: Traverse_011
+    2300022: Traverse_02
+    2300024: Traverse_03
+    2300026: Traverse_04
+    2300028: Traverse_05
+    3300000: _Rail_Guidage
+    3300002: Rail_Droit
+    3300004: Rail_Gauche
+    3300006: Traverse_00
+    3300008: Traverse_006
+    3300010: Traverse_007
+    3300012: Traverse_008
+    3300014: Traverse_009
+    3300016: Traverse_01
+    3300018: Traverse_010
+    3300020: Traverse_011
+    3300022: Traverse_02
+    3300024: Traverse_03
+    3300026: Traverse_04
+    3300028: Traverse_05
+    4300000: Traverse_00
+    4300002: Traverse_01
+    4300004: Traverse_02
+    4300006: Traverse_03
+    4300008: Traverse_04
+    4300010: Traverse_05
+    4300012: Rail_Gauche
+    4300014: Rail_Droit
+    4300016: _Rail_Guidage
+    4300018: Traverse_006
+    4300020: Traverse_007
+    4300022: Traverse_008
+    4300024: Traverse_009
+    4300026: Traverse_010
+    4300028: Traverse_011
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
