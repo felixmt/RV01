@@ -3,13 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class NotificationCenter : MonoBehaviour {
-	private string indication;
-	private int num_info;
+	private int idIndic;
 	private List<Vector2> drawPoints;
 
 	// Use this for initialization
 	void Start () {
-		num_info = 1;
+		idIndic = 1;
 		drawPoints = new List<Vector2> ();
 	
 	}
@@ -19,22 +18,15 @@ public class NotificationCenter : MonoBehaviour {
 	
 	}
 
-	public void objectChange (string indic) {
-		indication = indic;
+	public void setIdIndic (int avancement) {
+		idIndic = avancement;
 	}
 
-	public string getIndication () {
-		return indication;
+	public int getIdIndic () {
+		return idIndic;
 	}
 
-	public void setDidacticielNotif (int avancement) {
-		num_info = avancement;
-	}
-
-	public int getNumInfo () {
-		return num_info;
-	}
-
+	// signature drawing
 	public void setDrawPoint (Vector2 dp) {
 		drawPoints.Add (dp);
 	}

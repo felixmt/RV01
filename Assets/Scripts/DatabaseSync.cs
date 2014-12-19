@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.IO;
 using System.Data;
 using MySql.Data.MySqlClient;
 
@@ -9,6 +10,8 @@ public class DatabaseSync : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+		//string text = System.IO.File.ReadAllText(@".\bdd.txt");
+		//print (text);
 
 		OpenConnection ();
 		IDbCommand dbcmd = dbcon.CreateCommand();
@@ -36,12 +39,24 @@ public class DatabaseSync : MonoBehaviour {
 	}
 
 	void OpenConnection () {
+		// get connexion infos from file 
+		string line;
+		string[] dbInfo = new String[2];
+		int counter = 0;
+		System.IO.StreamReader file = 
+			new System.IO.StreamReader(@".\bdd.txt");
+		while((line = file.ReadLine()) != null)
+		{
+			dbInfo[counter] = line;
+			counter++;
+		}
+		file.Close();
 		// connexion locale
 		string connectionString =
 			"Server=localhost;" +
 				"Database=unity_rv01;" +
-				"User ID=root;" +
-				"Password=;" +
+				"User ID="+dbInfo[0]+";" +
+				"Password="+dbInfo[1]+";" +
 				"Pooling=false";
 		
 		dbcon = new MySqlConnection(connectionString);
@@ -54,11 +69,11 @@ public class DatabaseSync : MonoBehaviour {
 	}
 
 	// set or unset user's currently used object
-	public void setCurrentObject (string name, int value) {
+	public void setIsCurrent (int order, int value) {
 		OpenConnection ();
 		IDbCommand dbcmd = dbcon.CreateCommand();
 		string sql =
-			"UPDATE Object SET isCurrent = " + value + " WHERE name = '" + name + "'";
+			"UPDATE Object SET isCurrent = " + value + " WHERE `scenario_id` = 1 AND `order` = " + order;
 		dbcmd.CommandText = sql;
 		dbcmd.ExecuteNonQuery();
 		// clean up
@@ -96,11 +111,11 @@ public class DatabaseSync : MonoBehaviour {
 	}
 
 	// get infos about all mockup objects
-	public IDataReader getTable (string table_name) {
+	public IDataReader getTableByName (string table_name) {
 		OpenConnection ();
 		IDbCommand dbcmd = dbcon.CreateCommand();
 		string sql =
-			"SELECT * FROM " + table_name;
+			"SELECT * FROM " + table_name + " WHERE scenario_id = 1";
 		dbcmd.CommandText = sql;
 		IDataReader reader = dbcmd.ExecuteReader();
 		// clean up
@@ -108,7 +123,7 @@ public class DatabaseSync : MonoBehaviour {
 		//reader = null;
 		//dbcmd.Dispose();
 		//dbcmd = null;
-		//CloseConnection ();	
+		//CloseConnection ();
 		return reader;
 	}
 
@@ -155,11 +170,11 @@ public class DatabaseSync : MonoBehaviour {
 		return coord;
 	}
 
-	public IDataReader getObject (int order) {
+	public IDataReader getObjectByOrder (int order) {
 		OpenConnection ();
 		IDbCommand dbcmd = dbcon.CreateCommand();
 		string sql =
-			"SELECT * FROM Object WHERE `order` =  " + order;
+			"SELECT * FROM Object WHERE `order` =  " + order + " AND scenario_id = 1";
 		dbcmd.CommandText = sql;
 		IDataReader reader = dbcmd.ExecuteReader();
 		// clean up

@@ -141,20 +141,21 @@
      <Compile Include="Assets\MiddleVR\Scripts\Samples\VRShortcutReload.cs" />
      <Compile Include="Assets\MiddleVR\Scripts\Samples\VRVirtualTrackerMapping.cs" />
      <Compile Include="Assets\MiddleVR\Scripts\Samples\VRVirtualTrackerSimulation.cs" />
-     <Compile Include="Assets\Scripts\CameraPosition.cs" />
-     <Compile Include="Assets\Scripts\Compass.cs" />
-     <Compile Include="Assets\Scripts\CompassGui.cs" />
-     <Compile Include="Assets\Scripts\Control.cs" />
      <Compile Include="Assets\Scripts\DatabaseSync.cs" />
-     <Compile Include="Assets\Scripts\ElementsInfo.cs" />
      <Compile Include="Assets\Scripts\LeapControl.cs" />
+     <Compile Include="Assets\Scripts\MainControl.cs" />
+     <Compile Include="Assets\Scripts\MatchPositions.cs" />
      <Compile Include="Assets\Scripts\MockupObjectInfos.cs" />
-     <Compile Include="Assets\Scripts\Move.cs" />
-     <Compile Include="Assets\Scripts\NetworkManager.cs" />
      <Compile Include="Assets\Scripts\NotificationCenter.cs" />
      <Compile Include="Assets\Scripts\NotificationCenterGui.cs" />
-     <Compile Include="Assets\Scripts\mouseControl.cs" />
-     <Compile Include="Assets\TerrainToolkit\TerrainToolkit.cs" />
+     <Compile Include="Assets\Scripts\ObjectInfos.cs" />
+     <Compile Include="Assets\Scripts\Old\CameraPosition.cs" />
+     <Compile Include="Assets\Scripts\Old\Compass.cs" />
+     <Compile Include="Assets\Scripts\Old\CompassGui.cs" />
+     <Compile Include="Assets\Scripts\Old\Move.cs" />
+     <Compile Include="Assets\Scripts\Old\NetworkManager.cs" />
+     <Compile Include="Assets\Scripts\Old\mouseControl.cs" />
+     <Compile Include="Assets\Scripts\Rotation.cs" />
      <None Include="Assets\LeapMotion\Materials\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\MiddleVR\Assets\Materials\VR3DTextShader.shader" />
      <None Include="Assets\MiddleVR\Resources\AlphaSelfIllum.shader" />
@@ -169,7 +170,6 @@
      <None Include="Assets\MiddleVR\Assets\Materials\ScreenProximityWarningShader.shader" />
      <None Include="Assets\LeapMotion\Shaders\LeapDistorted.shader" />
      <None Include="Assets\LeapMotion\Shaders\LeapUndistorted.shader" />
-     <None Include="Assets\TerrainToolkit\Read me.txt" />
  <Reference Include="MiddleVR_dotNet">
  <HintPath>D:/RV01_Project2/Assets/MiddleVR/MiddleVR_dotNet.dll</HintPath>
  </Reference>

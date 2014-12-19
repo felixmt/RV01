@@ -46,8 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Connect.js" />
-     <Compile Include="Assets\TerrainToolkit\TerrainToolkitEnums.js" />
+     <Compile Include="Assets\Scripts\Old\Connect.js" />
      <None Include="Assets\LeapMotion\Materials\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\MiddleVR\Assets\Materials\VR3DTextShader.shader" />
      <None Include="Assets\MiddleVR\Resources\AlphaSelfIllum.shader" />
@@ -62,7 +61,6 @@
      <None Include="Assets\MiddleVR\Assets\Materials\ScreenProximityWarningShader.shader" />
      <None Include="Assets\LeapMotion\Shaders\LeapDistorted.shader" />
      <None Include="Assets\LeapMotion\Shaders\LeapUndistorted.shader" />
-     <None Include="Assets\TerrainToolkit\Read me.txt" />
  <Reference Include="Assembly-UnityScript-firstpass">
  <HintPath>D:/RV01_Project2/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
  </Reference>

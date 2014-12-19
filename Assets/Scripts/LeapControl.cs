@@ -5,35 +5,31 @@ using Leap;
 
 public class LeapControl : MonoBehaviour {
 
-	private Control controller;
+	private MainControl controller;
 	Leap.Controller leap_controller;
 
 	public const float TRIGGER_DISTANCE_RATIO = 0.7f;
 	
 	public float forceSpringConstant = 100.0f;
 	public float magnetDistance = 10.0f;
-	public int sign = 0;
+	private int sign = 0; /* value of sign change when all elements are at the good position, to enable the signature */
 	
 	protected bool pinching_;
 
 	// signature
 	List<Vector2> signaturePoints;
 	GameObject signature;
-
-	public void setSign (int s) {
-		sign = s;
-	}
+	
 	// Use this for initialization
 	void Start () {
 		signaturePoints = new List<Vector2> ();
-		//controller = transform.parent.GetComponent<Control> ();
-		controller = GameObject.Find ("TopCamera").GetComponent<Control> ();
+		//controller = transform.parent.GetComponent<MainControl> ();
+		controller = GameObject.Find ("Map").GetComponent<MainControl> ();
 		pinching_ = false;
+		/* enable the swipe gesture */
 		leap_controller = new Leap.Controller ();
 		leap_controller.EnableGesture (Gesture.GestureType.TYPE_SWIPE);
-		leap_controller.EnableGesture (Gesture.GestureType.TYPE_CIRCLE);
-		leap_controller.EnableGesture (Gesture.GestureType.TYPE_KEY_TAP);
-		//leap_controller.Config.SetFloat ("Gesture.swipe.MinVelocity", 500f);
+		leap_controller.Config.Save ();
 	}
 	
 	// Update is called once per frame
@@ -46,6 +42,7 @@ public class LeapControl : MonoBehaviour {
 			StartCoroutine (SignatureTimer(4.0f, 1));
 		}
 		switch (sign) {
+		// all the mockup objects are still not at the right place, so they are movable
 		case 0:
 		{
 			bool trigger_pinch = false;
@@ -58,20 +55,24 @@ public class LeapControl : MonoBehaviour {
 				{
 				case (Gesture.GestureType.TYPE_SWIPE):
 				{
-					//print ("Swipe gesture recognized");
-					controller.Rotation (new Vector3 (0, 0, 0), new Vector3 (0, 0, 0));
-					break;
-				}
-				case (Gesture.GestureType.TYPE_CIRCLE):
-				{
-					//print ("circle!");
-					controller.PlayBack();
-					break;
-				}
-				case (Gesture.GestureType.TYPE_KEY_TAP):
-				{
-					//print ("keytap");
-					//controller.Audio();
+					SwipeGesture swipeGesture = new SwipeGesture(gesture);
+					Vector swipeVector  = swipeGesture.Direction;
+					var isHorizontal = Mathf.Abs(swipeVector.x) > Mathf.Abs(swipeVector.y);
+					//Classify as honrizontal of vertical movement
+					if(isHorizontal) {
+						if (swipeVector.x > 0) {
+							// if swipe is from righ to left, anti-clockwise rotation
+							controller.Rotation (new Vector3 (-1, -1, -1), new Vector3 (-1, -1, -1));
+						} else {
+							// if swipe is from left to right, clockwise rotation
+							controller.Rotation (new Vector3 (0, 0, 0), new Vector3 (0, 0, 0));
+						}
+					} else {
+						// if swipe is from bottom to top : playback the audio instructions
+						if (swipeVector.y > 0) {
+							controller.PlayBack();
+						}
+					}
 					break;
 				}
 				}
@@ -97,7 +98,7 @@ public class LeapControl : MonoBehaviour {
 				}
 			}
 			
-			Vector3 pinch_position = hand_model.fingers[0].GetTipPosition();
+			Vector3 pinch_position = hand_model.fingers[2].GetTipPosition();
 			
 			// Only change state if it's different.
 			if (trigger_pinch && !pinching_)
@@ -107,10 +108,11 @@ public class LeapControl : MonoBehaviour {
 			
 			if	(controller.getTarget() != null) {
 				//controller.getTarget().transform.position = new Vector3 (hand_model.fingers[0].GetTipPosition().x, 3.0f, hand_model.fingers[0].GetTipPosition().z);
-				controller.getTarget().transform.position = new Vector3 (hand_model.GetPalmPosition().x, 122.0f, hand_model.GetPalmPosition().z);
+				controller.getTarget().transform.position = new Vector3 (hand_model.GetPalmPosition().x, 0.7f, hand_model.GetPalmPosition().z);
 			}
 			break;
 		}
+		// the mockup objects are all well placed, the computer is waiting for the user's swipe to enable the signature
 		case 1:
 		{
 			Frame frame = leap_controller.Frame();
@@ -118,16 +120,26 @@ public class LeapControl : MonoBehaviour {
 			{
 				switch(gesture.Type)
 				{
-				case (Gesture.GestureType.TYPE_CIRCLE):
+				case (Gesture.GestureType.TYPE_SWIPE):
 				{
-					print ("start register");
-					sign = 2;
+					SwipeGesture swipeGesture = new SwipeGesture(gesture);
+					Vector swipeVector  = swipeGesture.Direction;
+					var isHorizontal = Mathf.Abs(swipeVector.x) > Mathf.Abs(swipeVector.y);
+					//if vertical movement
+					if(!isHorizontal) {
+						// if swipe is from bottom to top : start signature
+						if (swipeVector.y > 0) {
+							print ("start register");
+							sign = 2;
+						}
+					}
 					break;
 				}
 				}
 			}
 			break;
 		}
+		// the user has now 4 seconds to write his signature
 		case 2:
 		{
 			HandModel hand_model = GetComponent<HandModel>();
@@ -136,6 +148,7 @@ public class LeapControl : MonoBehaviour {
 			StartCoroutine (SignatureTimer (4.0f, 3));
 			break;
 		}
+		// the game is finished and the signature is set on the armistice treaty
 		case 3:
 		{
 			GameObject.Find ("Paper").renderer.enabled = true;
@@ -164,47 +177,34 @@ public class LeapControl : MonoBehaviour {
 		}
 		}
 	}
+
+	/* called when the user make a pinch gesture, and if his hand is over an element, the element is movable */
+	void OnPinch(Vector3 pinch_position) {
+		pinching_ = true;
+		List<GameObject> objects = controller.getMockupObjects ();
+		// check if the hand is over an element
+		foreach (GameObject obj in objects) {
+			if (pinch_position.x > obj.transform.position.x - 0.1 && pinch_position.x < obj.transform.position.x + 0.1  && pinch_position.z > obj.transform.position.z - 0.1 && pinch_position.z < obj.transform.position.z + 0.1) {
+				controller.Pinch(obj);
+				break;
+			}
+		}
+	}
 	
+	/* if the user is pinching an object, this function is called when he open his hand in order to release the element */
+	void OnRelease() {
+		controller.Release ();
+		pinching_ = false;
+	}
+
+	/* when the user make the gesture to start his signature (swipe from bottom to top), he has 4 secondes to write */
 	IEnumerator SignatureTimer (float nbsec, int valsign) {
 		yield return new WaitForSeconds (nbsec);
 		sign = valsign;
 	}
 
-	void OnPinch(Vector3 pinch_position) {
-		pinching_ = true;
-		List<GameObject> objects = controller.getMockupObjects ();
-		foreach (GameObject obj in objects) {
-			if (pinch_position.x > obj.transform.position.x -2 && pinch_position.x < obj.transform.position.x + 2  && pinch_position.z > obj.transform.position.z -2 && pinch_position.z < obj.transform.position.z + 2) {
-				controller.Pinch(obj);
-				break;
-			}
-		}
-		/*List<GameObject> guns = controller.getMockupGuns ();
-		foreach (GameObject gun in guns) {
-			if (pinch_position.x > gun.transform.position.x -2 && pinch_position.x < gun.transform.position.x + 2  && pinch_position.z > gun.transform.position.z -2 && pinch_position.z < gun.transform.position.z + 2) {
-				controller.Pinch(gun);
-				break;
-			}
-		}
-		List<GameObject> wagons = controller.getMockupWagons ();
-		foreach (GameObject wagon in wagons) {
-			if (pinch_position.x > wagon.transform.position.x -2 && pinch_position.x < wagon.transform.position.x + 2  && pinch_position.z > wagon.transform.position.z -2 && pinch_position.z < wagon.transform.position.z + 2) {
-				controller.Pinch (wagon);
-				break;
-			}
-		}
-
-		List<GameObject> persons = controller.getMockupPersons ();
-		foreach (GameObject person in persons) {
-			if (pinch_position.x > person.transform.position.x -2 && pinch_position.x < person.transform.position.x + 2  && pinch_position.z > person.transform.position.z -2 && pinch_position.z < person.transform.position.z + 2) {
-				controller.Pinch (person);
-				break;
-			}
-		}*/
-	}
-	
-	void OnRelease() {
-		controller.Release ();
-		pinching_ = false;
+	// ACCESSORS / MUTATORS --------------------------
+	public void setSign (int s) {
+		sign = s;
 	}
 }

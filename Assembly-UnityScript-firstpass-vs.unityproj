@@ -64,7 +64,6 @@
      <None Include="Assets\MiddleVR\Assets\Materials\ScreenProximityWarningShader.shader" />
      <None Include="Assets\LeapMotion\Shaders\LeapDistorted.shader" />
      <None Include="Assets\LeapMotion\Shaders\LeapUndistorted.shader" />
-     <None Include="Assets\TerrainToolkit\Read me.txt" />
  <Reference Include="MiddleVR_dotNet">
  <HintPath>D:/RV01_Project2/Assets/MiddleVR/MiddleVR_dotNet.dll</HintPath>
  </Reference>
