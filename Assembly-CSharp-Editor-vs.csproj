@@ -66,9 +66,6 @@
  <Reference Include="Assembly-UnityScript-firstpass">
  <HintPath>D:/RV01_Project2/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
  </Reference>
- <Reference Include="Assembly-UnityScript">
- <HintPath>D:/RV01_Project2/Library/ScriptAssemblies/Assembly-UnityScript.dll</HintPath>
- </Reference>
  <Reference Include="MiddleVR_dotNet">
  <HintPath>D:/RV01_Project2/Assets/MiddleVR/MiddleVR_dotNet.dll</HintPath>
  </Reference>

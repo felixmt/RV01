@@ -45,9 +45,6 @@ public class Rotation : MonoBehaviour {
 	}
 
 	void Rotate () {
-		Vector3 centre; // origine
-		Vector3 axe;
-		float angle = 0;
 		if (rotationAxis) { // horizontal rotation
 			if (rotationDirection) {
 				transform.Rotate (new Vector3 (0, 1, 0));
@@ -55,7 +52,7 @@ public class Rotation : MonoBehaviour {
 			}
 			else {
 				transform.Rotate (new Vector3 (0, -1, 0));
-				GameObject.Find ("HandController").transform.Rotate (new Vector3 (0, 1, 0));
+				GameObject.Find ("HandController").transform.Rotate (new Vector3 (0, -1, 0));
 			}
 		} else { // vertical rotation
 
@@ -69,6 +66,10 @@ public class Rotation : MonoBehaviour {
 	// ACCESSORS MUTATORS --------------------------------------------
 	public void setBigElementIsMoved (bool im) {
 		bigElementIsMoved = im;
+	}
+
+	public bool getBigElementIsMoved () {
+		return bigElementIsMoved;
 	}
 	
 	public void setRotationDirection (bool ro) {

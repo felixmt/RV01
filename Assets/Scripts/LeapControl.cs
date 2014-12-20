@@ -29,6 +29,8 @@ public class LeapControl : MonoBehaviour {
 		/* enable the swipe gesture */
 		leap_controller = new Leap.Controller ();
 		leap_controller.EnableGesture (Gesture.GestureType.TYPE_SWIPE);
+		leap_controller.EnableGesture (Gesture.GestureType.TYPE_CIRCLE);
+		leap_controller.Config.SetFloat ("Gesture.Circle.MinArc", 2 * 3.14f);
 		leap_controller.Config.Save ();
 	}
 	
@@ -36,11 +38,9 @@ public class LeapControl : MonoBehaviour {
 	void Update () {
 		if (controller.getAvancement () == 8 && sign == 0)
 			sign = 1;
-		else if (controller.getAvancement () == 9 && sign == 0)
+		else if (controller.getAvancement () == 10 && sign == 0)
 			sign = 4;
-		if (controller.getAvancement() == 7) {
-			StartCoroutine (SignatureTimer(4.0f, 1));
-		}
+
 		switch (sign) {
 		// all the mockup objects are still not at the right place, so they are movable
 		case 0:
@@ -62,17 +62,29 @@ public class LeapControl : MonoBehaviour {
 					if(isHorizontal) {
 						if (swipeVector.x > 0) {
 							// if swipe is from righ to left, anti-clockwise rotation
-							controller.Rotation (new Vector3 (-1, -1, -1), new Vector3 (-1, -1, -1));
+							if (!controller.Unrotable())
+								controller.Rotation (new Vector3 (-1, -1, -1), new Vector3 (-1, -1, -1));
 						} else {
 							// if swipe is from left to right, clockwise rotation
-							controller.Rotation (new Vector3 (0, 0, 0), new Vector3 (0, 0, 0));
+							if (!controller.Unrotable())
+								controller.Rotation (new Vector3 (0, 0, 0), new Vector3 (0, 0, 0));
 						}
 					} else {
 						// if swipe is from bottom to top : playback the audio instructions
 						if (swipeVector.y > 0) {
-							controller.PlayBack();
+							if (!controller.Unrotable())
+								controller.VerticalRotation (false);
+							//controller.PlayBack();
+						} else {
+							if (!controller.Unrotable())
+								controller.VerticalRotation (true);
 						}
 					}
+					break;
+				}
+				case (Gesture.GestureType.TYPE_CIRCLE):
+				{
+					controller.PlayBack ();
 					break;
 				}
 				}
@@ -128,8 +140,11 @@ public class LeapControl : MonoBehaviour {
 					//if vertical movement
 					if(!isHorizontal) {
 						// if swipe is from bottom to top : start signature
-						if (swipeVector.y > 0) {
+						if (swipeVector.y <= 0) {
+							controller.VerticalRotation (true);
+							GameObject.Find ("Paper").renderer.enabled = true;
 							print ("start register");
+							controller.setAvancement(9);
 							sign = 2;
 						}
 					}
@@ -139,38 +154,36 @@ public class LeapControl : MonoBehaviour {
 			}
 			break;
 		}
-		// the user has now 4 seconds to write his signature
+		// the user has to sign and then make a gesture to end the signature process
 		case 2:
 		{
 			HandModel hand_model = GetComponent<HandModel>();
-			signaturePoints.Add (new Vector2 (GameObject.Find ("TopCamera").camera.WorldToViewportPoint (hand_model.fingers[1].GetTipPosition()).x, GameObject.Find ("TopCamera").camera.WorldToViewportPoint (hand_model.fingers[1].GetTipPosition()).y));
-			GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().setDrawPoint (new Vector2 (GameObject.Find ("TopCamera").camera.WorldToViewportPoint (hand_model.fingers[1].GetTipPosition()).x, GameObject.Find ("TopCamera").camera.WorldToViewportPoint (hand_model.fingers[1].GetTipPosition()).y));
-			StartCoroutine (SignatureTimer (4.0f, 3));
-			break;
-		}
-		// the game is finished and the signature is set on the armistice treaty
-		case 3:
-		{
-			GameObject.Find ("Paper").renderer.enabled = true;
-			sign = 4;
-			controller.setAvancement (9);
-			//GameObject paper = Instantiate (Resources.Load ("Prefabs/Paper"), new Vector3 (255, 11, 270), new Quaternion (0, 0, 0, 0)) as GameObject;
-			//paper.transform.rotation = Quaternion.Euler (-90, 0, 0);
-
-			if (! GameObject.Find ("signature")) {
-				signature = new GameObject("signature");
-				print ("llo");
+			if (hand_model.fingers[1].GetTipPosition().y < 1.1) {
+				signaturePoints.Add (new Vector2 (GameObject.Find ("Camera0").camera.WorldToViewportPoint (hand_model.fingers[1].GetTipPosition()).x, GameObject.Find ("Camera0").camera.WorldToViewportPoint (hand_model.fingers[1].GetTipPosition()).y));
+				GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().setDrawPoint (new Vector2 (GameObject.Find ("Camera0").camera.WorldToViewportPoint (hand_model.fingers[1].GetTipPosition()).x, GameObject.Find ("Camera0").camera.WorldToViewportPoint (hand_model.fingers[1].GetTipPosition()).y));
 			}
-			signature.AddComponent("LineRenderer");  
-			//signature.GetComponent<LineRenderer>().material = new Material (Shader.Find("Materials/black"));
-			signature.GetComponent<LineRenderer>().SetVertexCount(0);
-			if (signaturePoints.Count > 0){
-				int i = 0;
-				signature.GetComponent<LineRenderer>().SetVertexCount((signaturePoints.Count));
-				foreach (Vector2 sp in signaturePoints) {
-					if (sp.x != 0 && sp.y != 0)
-						signature.GetComponent<LineRenderer>().SetPosition (i, new Vector3 (255 + sp.x * 7, 2 + sp.y * 3, 252.5f));
-					i++;
+
+			Frame frame = leap_controller.Frame();
+			foreach (Gesture gesture in frame.Gestures())
+			{
+				switch(gesture.Type)
+				{
+				case (Gesture.GestureType.TYPE_SWIPE):
+				{
+					SwipeGesture swipeGesture = new SwipeGesture(gesture);
+					Vector swipeVector  = swipeGesture.Direction;
+					var isHorizontal = Mathf.Abs(swipeVector.x) > Mathf.Abs(swipeVector.y);
+					//if vertical movement
+					if(!isHorizontal) {
+						if (swipeVector.y > 0) {
+							controller.VerticalRotation (false);
+							print ("end register");
+							sign = 3;
+							controller.setAvancement(10);
+						}
+					}
+					break;
+				}
 				}
 			}
 			break;
@@ -195,12 +208,6 @@ public class LeapControl : MonoBehaviour {
 	void OnRelease() {
 		controller.Release ();
 		pinching_ = false;
-	}
-
-	/* when the user make the gesture to start his signature (swipe from bottom to top), he has 4 secondes to write */
-	IEnumerator SignatureTimer (float nbsec, int valsign) {
-		yield return new WaitForSeconds (nbsec);
-		sign = valsign;
 	}
 
 	// ACCESSORS / MUTATORS --------------------------

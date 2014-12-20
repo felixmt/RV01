@@ -8,7 +8,7 @@ public class NotificationCenter : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		idIndic = 1;
+		idIndic = 0;
 		drawPoints = new List<Vector2> ();
 	
 	}
