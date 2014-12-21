@@ -55,11 +55,20 @@ public class Rotation : MonoBehaviour {
 				GameObject.Find ("HandController").transform.Rotate (new Vector3 (0, -1, 0));
 			}
 		} else { // vertical rotation
-
-			if (rotationDirection) // vers le bas
-				transform.Rotate (new Vector3 (1, 0, 0));
-			else
-				transform.Rotate (new Vector3 (-1, 0, 0)); // vers le haut
+			if (rotationDirection) { // vers le bas
+				if (transform.rotation.eulerAngles.x >= 90 && transform.rotation.eulerAngles.x <= 315) {
+				//	bigElementIsMoved = false;
+				}
+				else
+					transform.Rotate (new Vector3 (1, 0, 0));
+			} else {// vers le haut
+				if (transform.rotation.eulerAngles.x == 0 || (transform.rotation.eulerAngles.x <= 360 && transform.rotation.eulerAngles.x >= 315)) {
+					//bigElementIsMoved = false;
+					//print (transform.rotation.eulerAngles);
+				}
+				else
+					transform.Rotate (new Vector3 (-1, 0, 0)); 
+			}
 		}
 	}
 

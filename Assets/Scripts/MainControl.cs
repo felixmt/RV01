@@ -34,8 +34,9 @@ public class MainControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		//print (GameObject.Find ("CenterNode").transform.rotation.eulerAngles	);
 		// show comapss
-		GetComponent<Compass> ().CompassChange (GameObject.Find ("Camera0").transform.eulerAngles.y);
+		GetComponent<Compass> ().CompassChange (GameObject.Find ("CenterNode").transform.eulerAngles.y);
 
 		if (avancement == 10) {
 			StartCoroutine (NewObject (bigElement));
@@ -43,7 +44,7 @@ public class MainControl : MonoBehaviour {
 		} else if (avancement == 9) { 
 			GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().setIdIndic (6);
 		} else if (avancement == 8) {
-			GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().setIdIndic (5);
+			//GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().setIdIndic (5);
 			StartCoroutine (NewObject (bigElement));
 		} else if (avancement == 2) {
 			if (!alreadyRotated)
@@ -147,6 +148,7 @@ public class MainControl : MonoBehaviour {
 					mc.renderer.enabled = false;
 				}
 			}
+			GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().setIdIndic (5);
 		}
 		else {
 			setTargetAsCurrent (avancement, 1);
@@ -160,15 +162,15 @@ public class MainControl : MonoBehaviour {
 				InstantiateMockupObject (avancement);
 			}
 			if (avancement == 7) {
-				Vector3 initVector = GameObject.Find ("Camera0").transform.forward; // A REVOIR AVEC OCULUS
-				Vector3 destVector = new Vector3 (0, 0, 1) - new Vector3 (0, 0, 0);//GameObject.Find ("Camera0").transform.position;
+				Vector3 initVector = GameObject.Find ("CenterNode").transform.forward; // A REVOIR AVEC OCULUS
+				Vector3 destVector = new Vector3 (0, 0, 1) - new Vector3 (0, 0, 0);//GameObject.Find ("CenterNode").transform.position;
 				Rotation (initVector, destVector);
 				avancement++;
 			} else {
 				bigElement = getBigElementByName (mockupObjects [avancement-1].name);
 				// rotate to the new object instanciated
-				Vector3 initVector = GameObject.Find ("Camera0").transform.forward; // A REVOIR AVEC OCULUS
-				Vector3 destVector = bigElement.transform.position - new Vector3 (0, 0, 0);//GameObject.Find ("Camera0").transform.position;
+				Vector3 initVector = GameObject.Find ("CenterNode").transform.forward; // A REVOIR AVEC OCULUS
+				Vector3 destVector = bigElement.transform.position - new Vector3 (0, 0, 0);//GameObject.Find ("CenterNode").transform.position;
 				Rotation (initVector, destVector);
 			}
 			if (avancement != 1)
@@ -179,8 +181,8 @@ public class MainControl : MonoBehaviour {
 	// wait before horizontal rotation
 	IEnumerator WaitBeforeHorizontalRotation (GameObject bigElement) {
 		yield return new WaitForSeconds (2.0f);
-		Vector3 initVector = GameObject.Find ("Camera0").transform.forward; // A REVOIR AVEC OCULUS
-		Vector3 destVector = new Vector3 (bigElement.transform.position.x * 38.46f, 0.45f, bigElement.transform.position.z * 38.46f) - new Vector3 (0, 0, 0);//GameObject.Find ("Camera0").transform.position;
+		Vector3 initVector = GameObject.Find ("CenterNode").transform.forward; // A REVOIR AVEC OCULUS
+		Vector3 destVector = new Vector3 (bigElement.transform.position.x * 38.46f, 0.45f, bigElement.transform.position.z * 38.46f) - new Vector3 (0, 0, 0);//GameObject.Find ("CenterNode").transform.position;
 		Rotation (initVector, destVector);
 	}
 
@@ -230,14 +232,18 @@ public class MainControl : MonoBehaviour {
 		GameObject.Find ("CenterNode").GetComponent<Rotation> ().setBigElementIsMoved (true);
 	}
 
-	// vertical rotation (false = from down to up
+	// vertical rotation (false = from down to up)
 	public void VerticalRotation (bool sens = true) {
-		if (avancement == 1 && GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().getIdIndic () == 1)
-		GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().setIdIndic (2);
-		GameObject.Find ("CenterNode").GetComponent<Rotation> ().setRotationAngle (90.0f);
+		float angle = 90.0f;
+		GameObject.Find ("CenterNode").GetComponent<Rotation> ().setRotationAngle (angle);
 		GameObject.Find ("CenterNode").GetComponent<Rotation> ().setRotationAxis (false);
 		GameObject.Find ("CenterNode").GetComponent<Rotation> ().setRotationDirection (sens);
-		GameObject.Find ("CenterNode").GetComponent<Rotation> ().setBigElementIsMoved (true);
+		if (sens && (GameObject.Find ("CenterNode").transform.rotation.eulerAngles.x <= 45 || GameObject.Find ("CenterNode").transform.rotation.eulerAngles.x >= 315)) {
+			if (avancement == 1 && GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().getIdIndic () == 1)
+				GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().setIdIndic (2);
+			GameObject.Find ("CenterNode").GetComponent<Rotation> ().setBigElementIsMoved (true);
+		} else if (!sens && GameObject.Find ("CenterNode").transform.rotation.eulerAngles.x >= 45 && GameObject.Find ("CenterNode").transform.rotation.eulerAngles.x <= 135)
+			GameObject.Find ("CenterNode").GetComponent<Rotation> ().setBigElementIsMoved (true);
 	}
 	
 	// if user can perform a rotation

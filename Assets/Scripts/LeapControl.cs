@@ -143,7 +143,7 @@ public class LeapControl : MonoBehaviour {
 						if (swipeVector.y <= 0) {
 							controller.VerticalRotation (true);
 							GameObject.Find ("Paper").renderer.enabled = true;
-							print ("start register");
+							//print ("start register");
 							controller.setAvancement(9);
 							sign = 2;
 						}
@@ -177,7 +177,7 @@ public class LeapControl : MonoBehaviour {
 					if(!isHorizontal) {
 						if (swipeVector.y > 0) {
 							controller.VerticalRotation (false);
-							print ("end register");
+							//print ("end register");
 							sign = 3;
 							controller.setAvancement(10);
 						}
