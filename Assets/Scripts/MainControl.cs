@@ -155,6 +155,7 @@ public class MainControl : MonoBehaviour {
 			if (avancement == 1) {
 				InstantiateMockupObject (avancement);
 				yield return new WaitForSeconds (13.0f);
+				GameObject.Find ("Picture").renderer.enabled = false;
 				GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().setIdIndic (1);
 			}
 			else {
