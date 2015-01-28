@@ -12,7 +12,7 @@ public class LeapControl : MonoBehaviour {
 	
 	public float forceSpringConstant = 100.0f;
 	public float magnetDistance = 10.0f;
-	private int sign = 0; /* value of sign change when all elements are at the good position, to enable the signature */
+	private int sign; /* value of sign change when all elements are at the good position, to enable the signature */
 	
 	protected bool pinching_;
 
@@ -36,8 +36,13 @@ public class LeapControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (controller.getAvancement () == 8 && sign == 0)
+		print (sign);
+		if (controller.getAvancement () < 8)
+			sign = 0;
+		else if (controller.getAvancement () == 8 && sign == 0)
 			sign = 1;
+		else if (controller.getAvancement () == 9 && sign == 0)
+			sign = 2;
 		else if (controller.getAvancement () == 10 && sign == 0)
 			sign = 4;
 
@@ -143,7 +148,7 @@ public class LeapControl : MonoBehaviour {
 						if (swipeVector.y <= 0) {
 							controller.VerticalRotation (true);
 							GameObject.Find ("Paper").renderer.enabled = true;
-							//print ("start register");
+							print ("start register");
 							controller.setAvancement(9);
 							sign = 2;
 						}
@@ -177,7 +182,7 @@ public class LeapControl : MonoBehaviour {
 					if(!isHorizontal) {
 						if (swipeVector.y > 0) {
 							controller.VerticalRotation (false);
-							//print ("end register");
+							print ("end register");
 							sign = 3;
 							controller.setAvancement(10);
 						}

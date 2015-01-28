@@ -44,7 +44,6 @@ public class MainControl : MonoBehaviour {
 		} else if (avancement == 9) { 
 			GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().setIdIndic (6);
 		} else if (avancement == 8) {
-			//GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().setIdIndic (5);
 			StartCoroutine (NewObject (bigElement));
 		} else if (avancement == 2) {
 			if (!alreadyRotated)
@@ -94,7 +93,7 @@ public class MainControl : MonoBehaviour {
 					
 					// TEST IF element bien positionné
 					if (Target.GetComponent<MockupObjectInfos>().associatedMarker == marker) {
-						if (GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().getIdIndic () == 3) {
+						if (GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().getIdIndic () == 3 || GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().getIdIndic () == 7) {
 							GameObject.Find ("Terrain").GetComponent<NotificationCenter> ().setIdIndic (0);
 						}
 						marker.renderer.material.SetColor("_Color", new Color (9f,248f,9f,255f));
